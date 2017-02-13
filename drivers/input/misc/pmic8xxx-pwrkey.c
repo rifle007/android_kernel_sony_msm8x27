@@ -23,9 +23,14 @@
 #include <linux/mfd/pm8xxx/core.h>
 #include <linux/input/pmic8xxx-pwrkey.h>
 
+#include <linux/hrtimer.h>
+#include <linux/reboot.h>
+
 #define PON_CNTL_1 0x1C
 #define PON_CNTL_PULL_UP BIT(7)
 #define PON_CNTL_TRIG_DELAY_MASK (0x7)
+
+#define REBOOT_PWRKEY_DUR          8000
 
 /**
  * struct pmic8xxx_pwrkey - pmic8xxx pwrkey information
@@ -40,9 +45,16 @@ struct pmic8xxx_pwrkey {
 	const struct pm8xxx_pwrkey_platform_data *pdata;
 };
 
+static s64 prev_time;
+static bool btn_pressed = false;
+
 static irqreturn_t pwrkey_press_irq(int irq, void *_pwrkey)
 {
 	struct pmic8xxx_pwrkey *pwrkey = _pwrkey;
+
+	//printk("ngxson: pwr button press\n");
+  	prev_time = ktime_to_ms(ktime_get());
+ 	btn_pressed = true;
 
 	if (pwrkey->press == true) {
 		pwrkey->press = false;
@@ -60,6 +72,13 @@ static irqreturn_t pwrkey_press_irq(int irq, void *_pwrkey)
 static irqreturn_t pwrkey_release_irq(int irq, void *_pwrkey)
 {
 	struct pmic8xxx_pwrkey *pwrkey = _pwrkey;
+
+	//printk("ngxson: pwr button release\n");
+  	if(((ktime_to_ms(ktime_get()) - prev_time) > REBOOT_PWRKEY_DUR) && btn_pressed) {
+  		printk("ngxson: reboot now\n");
+  		machine_restart(NULL);
+  	}
+ 	btn_pressed = false;
 
 	if (pwrkey->press == false) {
 		input_report_key(pwrkey->pwr, KEY_POWER, 1);
