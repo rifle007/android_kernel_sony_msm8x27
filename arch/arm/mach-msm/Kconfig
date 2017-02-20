@@ -1581,12 +1581,12 @@ config MSM_CPU_FREQ_SET_MIN_MAX
 config MSM_CPU_FREQ_MAX
 	int "Max CPU Frequency"
 	depends on MSM_CPU_FREQ_SET_MIN_MAX
-	default 384000
+	default 1782000
 
 config MSM_CPU_FREQ_MIN
 	int "Min CPU Frequency"
 	depends on MSM_CPU_FREQ_SET_MIN_MAX
-	default 245760
+	default 384000
 
 endif # CPU_FREQ_MSM
 
@@ -2181,6 +2181,14 @@ config MSM_RUN_QUEUE_STATS
 config MSM_STANDALONE_POWER_COLLAPSE
        bool "Enable standalone power collapse"
        default n
+
+config MSM_RUN_QUEUE_STATS_BE_CONSERVATIVE
+ 	bool "Use a more conservative computation for RQ Stats"
+ 	depends on MSM_RUN_QUEUE_STATS
+ 	default n
+ 	help
+ 	  Enable more conservative computation of load and size of the run
+ 	  queue.
 
 config MSM_GSBI9_UART
 	bool "Enable GSBI9 UART device"
