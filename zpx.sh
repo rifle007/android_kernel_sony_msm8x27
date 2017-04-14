@@ -145,7 +145,7 @@ fi
 
 #@@@@@@@@@@@@@@@@ AnyKernel2 @@@@@@@@@@@@@@@@@@@@@@#
 # Environment variables for flashable zip creation (AnyKernel2)
-ANYKERNEL=ZPX;
+ANYKERNEL=ZPX/AnyKernel2;
 
 ##sesuaikan lokasi boot arm/arm64 dan nama zImage
 KERNELPATH=arch/arm/boot;
@@ -163,17 +163,17 @@ ZIP=ZPX-kernel-$z-nicki-$DATE.zip;
 rm -rf modules
 mkdir modules
 find . -name "*.ko" -exec cp {} modules \;
-rm -rf ZPX/system/lib/modules
-mv modules ZPX/system/lib
+rm -rf $ANYKERNEL/modules
+mv modules $ANYKERNEL
 
 # Create flashable zip
 if [ -f $KERNELPATH/$ZIMAGE ]; then
 echo "Create Flashable zip Anykernel2";
-rm $ANYKERNEL/tmp/kernel/boot.img-zImage;
-cp $KERNELPATH/$ZIMAGE $ANYKERNEL/tmp/kernel/boot.img-zImage;
+rm $ANYKERNEL/boot.img-zImage;
+cp $KERNELPATH/$ZIMAGE $ANYKERNEL/boot.img-zImage;
 cd $ANYKERNEL/;
 zip -qr9 $ZIP .;
-cd ..;
+cd ../..;
 
 # The whole process is now complete. Now do some touches...
 # move ZIP to /root
@@ -182,8 +182,8 @@ mv -f $ANYKERNEL/$ZIP /root/sony/$ZIP;
 #Then doing cleanup
 echo "Doing post-cleanup...";
 # rm -f $KERNELPATH/$ZIMAGE;
-rm $ANYKERNEL/tmp/kernel/boot.img-zImage;
-rm -rf $ANYKERNEL/system/lib/modules;
+rm $ANYKERNEL/boot.img-zImage;
+rm -rf $ANYKERNEL/modules;
 echo "Done.";
 
 
