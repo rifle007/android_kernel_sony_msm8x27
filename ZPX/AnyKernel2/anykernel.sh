@@ -43,6 +43,7 @@ cp -rpf $patch/cron.d /system/etc
 chmod -R 755 /system/etc/init.d
 chmod -R 755 /system/etc/cron.d
 chmod -R 755 modules
+mv /system/bin/mpdecision /system/bin/mpdecision.bak
 # cp -rf modules /system/lib
 #mv /system/bin/vm_bms /system/bin/vm_bms.bak
 #chmod 644 $ramdisk/sbin/media_profiles.xml
