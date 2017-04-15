@@ -169,8 +169,8 @@ mv modules $ANYKERNEL
 # Create flashable zip
 if [ -f $KERNELPATH/$ZIMAGE ]; then
 echo "Create Flashable zip Anykernel2";
-rm $ANYKERNEL/boot.img-zImage;
-cp $KERNELPATH/$ZIMAGE $ANYKERNEL/boot.img-zImage;
+rm $ANYKERNEL/zImage >/dev/null 2>&1;
+cp $KERNELPATH/$ZIMAGE $ANYKERNEL/;
 cd $ANYKERNEL/;
 zip -qr9 $ZIP .;
 cd ../..;
@@ -181,8 +181,8 @@ mv -f $ANYKERNEL/$ZIP /root/sony/$ZIP;
 
 #Then doing cleanup
 echo "Doing post-cleanup...";
-# rm -f $KERNELPATH/$ZIMAGE;
-rm $ANYKERNEL/boot.img-zImage;
+rm -rf $KERNELPATH/$ZIMAGE;
+rm $ANYKERNEL/zImage;
 rm -rf $ANYKERNEL/modules;
 echo "Done.";
 
